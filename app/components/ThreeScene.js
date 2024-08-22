@@ -71,11 +71,11 @@ const ThreeImageEffect = ({ imageUrl }) => {
               float distanceFromMouse = distance(uv, u_mouse);
 
               // Wave effect
-              uv.y += sin(uv.x * 3.0 + u_time * 1.0) * 0.05;
-              uv.x += cos(uv.y * 3.0 + u_time * 1.0) * 0.05;
+              uv.y += sin(uv.x * 1.0 + u_time * 1.0) * 0.005;
+              uv.x += cos(uv.y * 1.0 + u_time * 1.0) * 0.005;
 
               // Ripple effect from the mouse
-              uv += vec2(sin(distanceFromMouse * 4.0 - u_time * 1.0) * 0.02, cos(distanceFromMouse * 10.0 - u_time * 5.0) * 0.02);
+              uv += vec2(sin(distanceFromMouse * 1.0 - u_time * 1.0) * 0.005, cos(distanceFromMouse * 10.0 - u_time * 5.0) * 0.005);
             }
 
             // Fetch the texture color
