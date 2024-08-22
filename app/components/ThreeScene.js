@@ -1,13 +1,14 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 const ThreeImageEffect = ({ imageUrl }) => {
   const containerRef = useRef(null);
-  const [renderer, setRenderer] = useState(null);
+  const rendererRef = useRef(null);  // Use a ref to track the renderer
 
   useEffect(() => {
-    if (!containerRef.current || renderer) return;
+    // Check if the renderer is already initialized
+    if (!containerRef.current || rendererRef.current) return;
 
     // Scene creation
     const scene = new THREE.Scene();
@@ -29,7 +30,8 @@ const ThreeImageEffect = ({ imageUrl }) => {
     );
     containerRef.current.appendChild(webGLRenderer.domElement);
 
-    setRenderer(webGLRenderer);
+    // Save the renderer reference
+    rendererRef.current = webGLRenderer;
 
     // Load texture asynchronously and start rendering after it's loaded
     const textureLoader = new THREE.TextureLoader();
@@ -131,7 +133,10 @@ const ThreeImageEffect = ({ imageUrl }) => {
           containerRef.current.removeEventListener('mouseenter', handleMouseEnter);
           containerRef.current.removeEventListener('mouseleave', handleMouseLeave);
           containerRef.current.removeEventListener('mousemove', handleMouseMove);
+          
+          // Dispose of the renderer and clear the reference
           webGLRenderer.dispose();
+          rendererRef.current = null;
         };
       },
       undefined,
@@ -139,7 +144,7 @@ const ThreeImageEffect = ({ imageUrl }) => {
         console.error('Error loading texture:', error);
       }
     );
-  }, [renderer, imageUrl]);
+  }, [imageUrl]);  // Use `imageUrl` as the dependency
 
   return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
 };
