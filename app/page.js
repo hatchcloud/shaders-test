@@ -1,12 +1,16 @@
 
 import dynamic from 'next/dynamic';
-const ThreeScene = dynamic(() => import('../app/components/ThreeScene'), { ssr: false });
+const ThreeImageEffect = dynamic(() => import('../app/components/ThreeScene'), { ssr: false });
+const ThreeSceneGrid = dynamic(() => import('../app/components/ThreeSceneGrid'), { ssr: false });
 
 export default function Home() {
   return (
-    <main className='flex items-center justify-center h-screen w-screen'>
+    <main className='flex items-center justify-center h-screen w-screen gap-7'>
       <div id="imageContainer" style={{ width: '600px', height: '600px' }} className='overflow-hidden' >
-        <ThreeScene imageUrl="/cuadrado.png"/>
+        <ThreeImageEffect imageUrl="/cuadrado.png"/>
+      </div>
+      <div id="imageContainer" style={{ width: '600px', height: '600px' }} className='overflow-hidden' >
+        <ThreeSceneGrid imageUrl="/cuadrado.png"/>
       </div>
     </main>
   );
