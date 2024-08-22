@@ -62,8 +62,8 @@ const ThreeSceneGrid = ({ imageUrl }) => {
           uniform float u_aberrationIntensity;
 
           void main() {
-              vec2 gridUV = floor(vUv * vec2(20.0, 20.0)) / vec2(20.0, 20.0);
-              vec2 centerOfPixel = gridUV + vec2(1.0/20.0, 1.0/20.0);
+              vec2 gridUV = floor(vUv * vec2(16.0, 16.0)) / vec2(16.0, 16.0);
+              vec2 centerOfPixel = gridUV + vec2(1.0/16.0, 1.0/16.0);
               
               vec2 mouseDirection = u_mouse - u_prevMouse;
               
@@ -71,12 +71,12 @@ const ThreeSceneGrid = ({ imageUrl }) => {
               float pixelDistanceToMouse = length(pixelToMouseDirection);
               float strength = smoothstep(0.3, 0.0, pixelDistanceToMouse);
        
-              vec2 uvOffset = strength * -mouseDirection * 0.2;
+              vec2 uvOffset = strength * -mouseDirection * 0.3;
               vec2 uv = vUv - uvOffset;
 
-              vec4 colorR = texture2D(u_texture, uv + vec2(strength * u_aberrationIntensity * 0.01, 0.0));
+              vec4 colorR = texture2D(u_texture, uv + vec2(strength * u_aberrationIntensity * 0.02, 0.0));
               vec4 colorG = texture2D(u_texture, uv);
-              vec4 colorB = texture2D(u_texture, uv - vec2(strength * u_aberrationIntensity * 0.01, 0.0));
+              vec4 colorB = texture2D(u_texture, uv - vec2(strength * u_aberrationIntensity * 0.02, 0.0));
 
               gl_FragColor = vec4(colorR.r, colorG.g, colorB.b, 1.0);
           }

@@ -9,7 +9,7 @@ export default function Home() {
       <div id="imageContainer" style={{ width: '600px', height: '600px' }} className='overflow-hidden' >
         <ThreeImageEffect imageUrl="/cuadrado.png"/>
       </div>
-      <div id="imageContainer" style={{ width: '600px', height: '600px' }} className='overflow-hidden' >
+      <div id="imageContainer2" style={{ width: '600px', height: '600px' }} className='overflow-hidden' >
         <ThreeSceneGrid imageUrl="/cuadrado.png"/>
       </div>
     </main>
