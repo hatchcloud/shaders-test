@@ -4,10 +4,10 @@ import * as THREE from 'three';
 
 const ThreeImageEffect = ({ imageUrl }) => {
   const containerRef = useRef(null);
-  const rendererRef = useRef(null);  // Use a ref to track the renderer
+  const rendererRef = useRef(null); // Use a ref to track the renderer
+  const timeoutRef = useRef(null); // Ref to store the timeout ID
 
   useEffect(() => {
-    // Check if the renderer is already initialized
     if (!containerRef.current || rendererRef.current) return;
 
     // Scene creation
@@ -109,11 +109,19 @@ const ThreeImageEffect = ({ imageUrl }) => {
 
         // Event listeners for mouse interaction
         const handleMouseEnter = () => {
-          shaderUniforms.distortionEnabled.value = 1.0;  // Enable distortion on mouse enter
+          // Clear any pending timeout if the mouse re-enters
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+          }
+          shaderUniforms.distortionEnabled.value = 1.0; // Enable distortion on mouse enter
         };
 
         const handleMouseLeave = () => {
-          shaderUniforms.distortionEnabled.value = 0.0;  // Disable distortion on mouse leave
+          // Delay the disabling of distortion
+          timeoutRef.current = setTimeout(() => {
+            shaderUniforms.distortionEnabled.value = 0.0; // Disable distortion after delay
+          }, 500); // Adjust the delay time in milliseconds
         };
 
         const handleMouseMove = (event) => {
@@ -137,6 +145,12 @@ const ThreeImageEffect = ({ imageUrl }) => {
           // Dispose of the renderer and clear the reference
           webGLRenderer.dispose();
           rendererRef.current = null;
+
+          // Clear any pending timeout
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+          }
         };
       },
       undefined,
