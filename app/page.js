@@ -5,7 +5,7 @@ const ThreeSceneGrid = dynamic(() => import('../app/components/ThreeSceneGrid'),
 
 export default function Home() {
   return (
-    <main className='flex items-center justify-center h-screen w-screen gap-7'>
+    <main className='flex flex-col md:flex-row items-center justify-center h-screen w-screen gap-7'>
       <div id="imageContainer" style={{ width: '600px', height: '600px' }} className='overflow-hidden' >
         <ThreeImageEffect imageUrl="/cuadrado.png"/>
       </div>
