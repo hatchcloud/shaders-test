@@ -5,7 +5,7 @@ const ThreeScene = dynamic(() => import('../app/components/ThreeScene'), { ssr: 
 export default function Home() {
   return (
     <main className='flex items-center justify-center h-screen w-screen'>
-      <div id="imageContainer "style={{ width: '100%', height: '100%' }}>
+      <div id="imageContainer "style={{ width: '800px', height: '800px' }}>
         <ThreeScene imageUrl="/mockup.png"/>
       </div>
     </main>

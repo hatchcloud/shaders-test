@@ -41,6 +41,7 @@ const ThreeImageEffect = ({ imageUrl }) => {
           u_texture: { value: texture },
           u_mouse: { value: new THREE.Vector2(0.5, 0.5) },
           u_time: { value: 0.0 },
+          distortionEnabled: { value: 0.0 },  // New uniform to control distortion
         };
 
         // Vertex shader
@@ -57,21 +58,25 @@ const ThreeImageEffect = ({ imageUrl }) => {
           uniform sampler2D u_texture;
           uniform vec2 u_mouse;
           uniform float u_time;
+          uniform float distortionEnabled;
           varying vec2 vUv;
 
           void main() {
             vec2 uv = vUv;
 
-            // Calculate the distance from the mouse position
-            float distanceFromMouse = distance(uv, u_mouse);
+            // If distortion is enabled, apply the wave effect
+            if (distortionEnabled > 0.5) {
+              float distanceFromMouse = distance(uv, u_mouse);
 
-            // Create wave effect by distorting the uv coordinates
-            uv.y += sin(uv.x * 10.0 + u_time * 2.0) * 0.05;
-            uv.x += cos(uv.y * 10.0 + u_time * 2.0) * 0.05;
+              // Wave effect
+              uv.y += sin(uv.x * 10.0 + u_time * 2.0) * 0.05;
+              uv.x += cos(uv.y * 10.0 + u_time * 2.0) * 0.05;
 
-            // Apply a ripple effect from the mouse
-            uv += vec2(sin(distanceFromMouse * 10.0 - u_time * 5.0) * 0.02, cos(distanceFromMouse * 10.0 - u_time * 5.0) * 0.02);
+              // Ripple effect from the mouse
+              uv += vec2(sin(distanceFromMouse * 10.0 - u_time * 5.0) * 0.02, cos(distanceFromMouse * 10.0 - u_time * 5.0) * 0.02);
+            }
 
+            // Fetch the texture color
             vec4 color = texture2D(u_texture, uv);
             gl_FragColor = color;
           }
@@ -101,6 +106,14 @@ const ThreeImageEffect = ({ imageUrl }) => {
         animate();
 
         // Event listeners for mouse interaction
+        const handleMouseEnter = () => {
+          shaderUniforms.distortionEnabled.value = 1.0;  // Enable distortion on mouse enter
+        };
+
+        const handleMouseLeave = () => {
+          shaderUniforms.distortionEnabled.value = 0.0;  // Disable distortion on mouse leave
+        };
+
         const handleMouseMove = (event) => {
           const rect = containerRef.current.getBoundingClientRect();
           shaderUniforms.u_mouse.value.set(
@@ -109,10 +122,14 @@ const ThreeImageEffect = ({ imageUrl }) => {
           );
         };
 
+        containerRef.current.addEventListener('mouseenter', handleMouseEnter);
+        containerRef.current.addEventListener('mouseleave', handleMouseLeave);
         containerRef.current.addEventListener('mousemove', handleMouseMove);
 
         // Cleanup event listeners and renderer on component unmount
         return () => {
+          containerRef.current.removeEventListener('mouseenter', handleMouseEnter);
+          containerRef.current.removeEventListener('mouseleave', handleMouseLeave);
           containerRef.current.removeEventListener('mousemove', handleMouseMove);
           webGLRenderer.dispose();
         };
